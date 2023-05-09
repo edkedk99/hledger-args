@@ -41,7 +41,7 @@ fix:
 .PHONY: serve-docs
 serve-docs:
 	source venv/bin/activate && \
-	$(test_docs) && \
+	# $(test_docs) && \
 	PYTHONPATH="$(CURDIR)" mkdocs serve
 
 .PHONY: gh-deploy

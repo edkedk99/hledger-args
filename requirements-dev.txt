@@ -7,6 +7,7 @@ black
 build
 mkdocs
 mkdocs-click
+mkdocs-material
 vermin
 pytest
 pytest-cov
