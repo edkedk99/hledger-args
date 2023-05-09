@@ -1,0 +1,27 @@
+site_name: hledger-args
+site_url: https://edkedek99.github.io/hledger-args/
+repo_url: https://github.com/edkedk99/hledger-args
+strict: true
+remote_name: github
+
+theme:
+  name: material
+  palette:
+    primary: teal
+  features:
+    - navigation.tracking
+    - navigation.sections
+    - navigation.path
+    - navigation.top
+
+nav:
+    - Home: README.md
+
+markdown_extensions:
+  - attr_list
+  - mkdocs-click
+  - toc:
+        permalink: "#"
+
+
+

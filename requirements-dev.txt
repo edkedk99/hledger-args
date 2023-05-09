@@ -1,0 +1,15 @@
+ipython
+ipdb
+build
+rich
+isort
+black
+build
+mkdocs
+mkdocs-click
+vermin
+pytest
+pytest-cov
+pytest-html
+twine
+asciinema
