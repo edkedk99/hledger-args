@@ -52,13 +52,13 @@ def cli(
 
      ---
 
-     In basic usage, this package is a replacement for [hledger command file](https://hledger.org/1.29/hledger.html#command-arguments) using custom directives inside the journal file, instead of referencing to a command args file
+     In basic usage, this package is a replacement for [hledger argument file](https://hledger.org/1.29/hledger.html#command-arguments) using custom directives inside the journal file, instead of referencing to an argument file
 
-     **Interactive Mode**: Instead of giving the the desired command thru a command-line argument, choose it by selecting from a menu using the flag *--interactive*
+     **Interactive Mode**: Instead of giving the desired command thru a command-line argument, choose it by selecting from a menu using the flag *--interactive*
 
      **Placeholder Command Substitution**: In Interactive Mode, a command can use placeholders by putting them between *curly braces* and additional prompts wil ask for the value and do the proper substitution
 
-     **Special Placeholders**: *{account}* and *{tag}* are special placeholders that offers autocomplete with fuzzy search using data from the journal
+     **Special Placeholders**: *{account}, {payee}, {tag} and {months}* are special placeholders that offers autocomplete with fuzzy search using data from the journal
 
      **Sub directive format**:
 

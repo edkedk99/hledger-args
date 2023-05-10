@@ -1,7 +1,7 @@
 import re
 import subprocess
 from typing import List, Optional, Tuple
-
+from datetime import datetime, timedelta
 import questionary
 from prompt_toolkit.shortcuts import CompleteStyle
 
@@ -20,6 +20,14 @@ def custom_autocomplete(name: str, choices: List[str]):
     return question
 
 
+def val_date(date: str):
+    try:
+        datetime.strptime(date, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return "Invalid date format"
+
+
 class InteractiveArgs(BaseArgs):
     def __init__(self, files: Tuple[str, ...]) -> None:
         super().__init__(files)
@@ -36,10 +44,24 @@ class InteractiveArgs(BaseArgs):
             value = custom_autocomplete(
                 f"Value for tag {tag}", choices=tag_values
             ).ask()
-            answer = f"tag:{tag}={value}"
+            answer = f"\"tag:{tag}={value}\""
+        elif placeholder == "months":
+            initial: str = questionary.text(
+                "Initial", instruction="YYYY-MM-DD", validate=val_date
+            ).ask()
+            final = questionary.text(
+                "Final (inclusive)", instruction="YYYY-MM-DD", validate=val_date
+            ).ask()
+            next_final_date = datetime.strptime(final, "%Y-%m-%d") + timedelta(days=1)
+            next_final = next_final_date.strftime("%Y-%m-%d")
+            answer = f"--begin {initial} --end {next_final}"
+        elif placeholder == "payee":
+            choices = self.get_hledger_lines(["payees"])
+            payee = custom_autocomplete(placeholder, choices).ask()
+            answer = f"\"payee:{payee}\""
         else:
             answer = questionary.text(placeholder).ask()
-
+            
         return answer
 
     def substitute(self, match: re.Match):

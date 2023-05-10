@@ -12,7 +12,12 @@ Instead of giving the the desired command thru a command-line argument, choose i
 
 ### Special placeholders
 
-*{account}* and *{tag}* are reserved placeholders that offers autocomplete with fuzzy search using data from the journal
+| Placeholders | Description                                                                       |
+|--------------|-----------------------------------------------------------------------------------|
+| {account}    | fuzzy search existing accounts or new                                             |
+| {payee}      | fuzzy search existing payee or new                                                |
+| {tag}        | fuzzy search existing tags or values or new                                       |
+| {months}     | prompt initial and end dates both inclusive. **Diferent from default hledger-args |
 
 ## Installation
 
