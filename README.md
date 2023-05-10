@@ -12,12 +12,13 @@ Instead of giving the the desired command thru a command-line argument, choose i
 
 ### Special placeholders
 
-| Placeholders | Description                                                                       |
-|--------------|-----------------------------------------------------------------------------------|
-| {account}    | fuzzy search existing accounts or new                                             |
-| {payee}      | fuzzy search existing payee or new                                                |
-| {tag}        | fuzzy search existing tags or values or new                                       |
-| {months}     | prompt initial and end dates both inclusive. **Diferent from default hledger-args |
+| Placeholders | Description                                                                    |
+|--------------|--------------------------------------------------------------------------------|
+| {account}    | fuzzy search existing accounts or new                                          |
+| {payee}      | fuzzy search existing payee or new                                             |
+| {tag}        | fuzzy search existing tags and values or new                                   |
+| {months}     | prompt initial and end dates both inclusive. **Diferent from default hledger** |
+
 
 ## Installation
 

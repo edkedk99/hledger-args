@@ -1,7 +1,8 @@
 import re
 import subprocess
-from typing import List, Optional, Tuple
 from datetime import datetime, timedelta
+from typing import List, Optional, Tuple
+
 import questionary
 from prompt_toolkit.shortcuts import CompleteStyle
 
@@ -44,7 +45,7 @@ class InteractiveArgs(BaseArgs):
             value = custom_autocomplete(
                 f"Value for tag {tag}", choices=tag_values
             ).ask()
-            answer = f"\"tag:{tag}={value}\""
+            answer = f'"tag:{tag}={value}"'
         elif placeholder == "months":
             initial: str = questionary.text(
                 "Initial", instruction="YYYY-MM-DD", validate=val_date
@@ -58,10 +59,10 @@ class InteractiveArgs(BaseArgs):
         elif placeholder == "payee":
             choices = self.get_hledger_lines(["payees"])
             payee = custom_autocomplete(placeholder, choices).ask()
-            answer = f"\"payee:{payee}\""
+            answer = f'"payee:{payee}"'
         else:
             answer = questionary.text(placeholder).ask()
-            
+
         return answer
 
     def substitute(self, match: re.Match):
