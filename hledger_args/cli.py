@@ -58,7 +58,7 @@ def cli(
 
      **Placeholder Command Substitution**: In Interactive Mode, a command can use placeholders by putting them between *curly braces* and additional prompts wil ask for the value and do the proper substitution
 
-     **Special Placeholders**: *{account}, {payee}, {tag} and {months}* are special placeholders that offers autocomplete with fuzzy search using data from the journal
+     **Special Placeholders**: *{account}, {payee}, {tag}, {tag_name}, {months}, {type}, {cur}* are special placeholders that offers autocomplete with fuzzy search using data from the journal. See the [README](https://github.com/edkedk99/hledger-args) for explanation on each of them
 
      **Sub directive format**:
 

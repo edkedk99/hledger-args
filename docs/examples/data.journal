@@ -2,11 +2,11 @@
 #+hledger-lots no_desc:
 
 #+args bal:bal {payee} -M {months}
-#+args buy_aapl:bal desc:"Buy AAPL"
+#+args buy_aapl:bal desc:"Buy AAPL" {type}
 #+args aapl_cur:bal desc:"Buy AAPL" cur:{commodity}
 #+args itag:print {tag} {account}
 #+args iacct: print {account}
-
+#+args sell_aapl: bal {cur} {tag_price}
 commodity 1,000.00   USD
 commodity 1,000.0000 AAPL        ; yahoo_ticker:AAPL
 commodity 1,000.0000 GOOG        ; yahoo_ticker:GOOG

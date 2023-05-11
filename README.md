@@ -14,10 +14,13 @@ Instead of giving the the desired command thru a command-line argument, choose i
 
 | Placeholders | Description                                                                    |
 |--------------|--------------------------------------------------------------------------------|
-| {account}    | fuzzy search existing accounts or new                                          |
-| {payee}      | fuzzy search existing payee or new                                             |
-| {tag}        | fuzzy search existing tags and values or new                                   |
+| {account}    | fuzzy search existing accounts                                                 |
+| {payee}      | fuzzy search existing payee                                                    |
+| {tag}        | fuzzy search existing tags and values                                          |
+| {tag_name}   | search tag name after "_" and fuzzy search existing values for this tag        |
 | {months}     | prompt initial and end dates both inclusive. **Diferent from default hledger** |
+| {type}       | select between accounts type                                                   |
+| {cur}        | fuzzy search existing commodities                                              |
 
 
 ## Installation

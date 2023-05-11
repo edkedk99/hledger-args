@@ -9,24 +9,32 @@ from prompt_toolkit.shortcuts import CompleteStyle
 from .base_args import BaseArgs
 
 
-def custom_autocomplete(name: str, choices: List[str]):
-    question = questionary.autocomplete(
-        f"{name} (TAB to autocomplete)",
-        choices=choices,
-        ignore_case=True,
-        match_middle=True,
-        style=questionary.Style([("answer", "fg:#f71b07")]),
-        complete_style=CompleteStyle.MULTI_COLUMN,
-    )
-    return question
-
-
 def val_date(date: str):
     try:
         datetime.strptime(date, "%Y-%m-%d")
         return True
     except ValueError:
         return "Invalid date format"
+
+
+def val_existing(choices: List[str], value: str):
+    if value in choices:
+        return True
+    else:
+        return "Only existing values are accepted"
+
+
+def custom_autocomplete(name: str, choices: List[str]):
+    question = questionary.autocomplete(
+        f"{name} (TAB to autocomplete)",
+        choices=choices,
+        validate=lambda value: val_existing(choices, value),
+        ignore_case=True,
+        match_middle=True,
+        style=questionary.Style([("answer", "fg:#f71b07")]),
+        complete_style=CompleteStyle.MULTI_COLUMN,
+    )
+    return question
 
 
 class InteractiveArgs(BaseArgs):
@@ -46,6 +54,13 @@ class InteractiveArgs(BaseArgs):
                 f"Value for tag {tag}", choices=tag_values
             ).ask()
             answer = f'"tag:{tag}={value}"'
+        elif placeholder.startswith("tag_"):
+            tag_name = placeholder.split("_", 1)[1]
+            tag_values = self.get_hledger_lines(["tags", tag_name, "--values"])
+            value = custom_autocomplete(
+                f"Value for tag {tag_name}", choices=tag_values
+            ).ask()
+            answer = f'"tag:{tag_name}={value}"'
         elif placeholder == "months":
             initial: str = questionary.text(
                 "Initial", instruction="YYYY-MM-DD", validate=val_date
@@ -60,6 +75,25 @@ class InteractiveArgs(BaseArgs):
             choices = self.get_hledger_lines(["payees"])
             payee = custom_autocomplete(placeholder, choices).ask()
             answer = f'"payee:{payee}"'
+        elif placeholder == "cur":
+            choices = self.get_hledger_lines(["commodities"])
+            commodity = custom_autocomplete(placeholder, choices).ask()
+            answer = f'"cur:{commodity}"'
+        elif placeholder == "type":
+            types = dict(
+                Asset="A",
+                Liability="L",
+                Equity="E",
+                Revenue="R",
+                Expense="X",
+                Cash="C",
+                Conversion="V",
+            )
+            choices = list(types.keys())
+            _type = questionary.select("Account Type", choices=choices).ask()
+            type_code = types[_type]
+            answer = f'"type:{type_code}"'
+
         else:
             answer = questionary.text(placeholder).ask()
 
