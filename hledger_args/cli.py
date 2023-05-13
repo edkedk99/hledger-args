@@ -1,7 +1,7 @@
-from typing import Tuple
-
+from typing import Tuple, Optional
 import rich_click as click
 
+from hledger_args.output_result import output_report
 from .batch_args import BatchArgs
 from .inter_args import InteractiveArgs
 
@@ -38,10 +38,27 @@ click.rich_click.STYLE_OPTIONS_PANEL_BORDER = "dim"  # Possibly conceal
     required=False,
     help="Run in interactive mode by answering the prompts. [NAME] and [EXTRA_HLEDGER_OPTIONS] are not used in this mode.",
 )
+@click.option(
+    "-d",
+    "--pdf-dir",
+    type=click.Path(
+        file_okay=False,
+        dir_okay=True,
+    ),
+    required=False,
+)
+@click.option(
+    "-o", "--pdf-file", type=click.Path(file_okay=True, dir_okay=False), required=False
+)
 @click.argument("name", type=click.STRING, required=False)
 @click.argument("extra_hledger_options", nargs=-1)
 def cli(
-    file: str, interactive: bool, name: str, extra_hledger_options: Tuple[str, ...]
+    file: str,
+    interactive: bool,
+    name: str,
+    extra_hledger_options: Tuple[str, ...],
+    pdf_dir: Optional[str],
+    pdf_file: Optional[str],
 ):
     """
      ---
@@ -77,7 +94,7 @@ def cli(
 
     if interactive:
         args = InteractiveArgs((file,))
-        args.menu()
     else:
-        args = BatchArgs((file,))
-        args.run_batch(name, extra_hledger_options)
+        args = BatchArgs((file,), name, extra_hledger_options)
+
+    output_report(args, pdf_dir, pdf_file)

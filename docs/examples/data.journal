@@ -1,7 +1,8 @@
 #+hledger-lots avg_cost:false, check:true
 #+hledger-lots no_desc:
 
-#+args bal:bal {payee} -M {months}
+#+args bal_int:bal {payee} -M {months}
+#+args bal:bal
 #+args buy_aapl:bal desc:"Buy AAPL" {type}
 #+args aapl_cur:bal desc:"Buy AAPL" cur:{commodity}
 #+args itag:print {tag} {account}

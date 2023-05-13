@@ -41,4 +41,4 @@ class BaseArgs:
 
         base_comm_str = shlex.join(base_comm)
         print(f"stderr: {base_comm_str}\n", file=sys.stderr)
-        print(report)
+        return report

@@ -4,8 +4,16 @@ from .base_args import BaseArgs
 
 
 class BatchArgs(BaseArgs):
-    def __init__(self, files: Tuple[str, ...]) -> None:
+    def __init__(
+        self,
+        files: Tuple[str, ...],
+        name: Optional[str],
+        hledger_options: Tuple[str, str],
+    ) -> None:
         super().__init__(files)
+        self.name = name
+        self.hledger_options = hledger_options
+        self.report = self.run_batch()
 
     @property
     def available_txt(self):
@@ -23,14 +31,13 @@ class BatchArgs(BaseArgs):
             text += has_ask_str + "\n\n"
         return text
 
-    def run_batch(self, name: Optional[str], hledger_options: Tuple[str, str]):
-        if not name:
-            print(self.available_txt)
-            return
-        elif name not in self.names:
-            raise KeyError(f"{name} not found.\n\n{self.available_txt}")
-        elif name in self.has_ask:
-            raise KeyError(f"{name} is interactive only.\n\n{self.available_txt}")
+    def run_batch(self):
+        if not self.name:
+            return f"Missing command\n\n{self.available_txt}"
+        elif self.name not in self.names:
+            raise KeyError(f"{self.name} not found.\n\n{self.available_txt}")
+        elif self.name in self.has_ask:
+            raise KeyError(f"{self.name} is interactive only.\n\n{self.available_txt}")
         else:
-            options = self.args[name]
-            self.run_args(options, hledger_options)
+            options = self.args[self.name]
+            return self.run_args(options, self.hledger_options)

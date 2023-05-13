@@ -40,6 +40,8 @@ def custom_autocomplete(name: str, choices: List[str]):
 class InteractiveArgs(BaseArgs):
     def __init__(self, files: Tuple[str, ...]) -> None:
         super().__init__(files)
+        self.name = self.menu()
+        self.report = self.get_report()
 
     def ask_placeholder(self, placeholder: str) -> str:
         if placeholder == "account":
@@ -120,14 +122,16 @@ class InteractiveArgs(BaseArgs):
         return report_list
 
     def menu(self):
-        name = questionary.select(
+        name: str = questionary.select(
             "Choose report",
             choices=list(self.names),
             use_shortcuts=True,
             use_indicator=False,
             show_selected=False,
         ).ask()
+        return name
 
-        options_str = self.args[name]
+    def get_report(self):
+        options_str = self.args[self.name]
         replaced = self.replace_options(options_str)
-        self.run_args(replaced)
+        return self.run_args(replaced)
