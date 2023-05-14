@@ -31,9 +31,30 @@ class BatchArgs(BaseArgs):
             text += has_ask_str + "\n\n"
         return text
 
+    def run_one_for_all(self, name: str, hledger_options: Tuple[str, ...]):
+        report = self.run_args(name, hledger_options)
+        result = f"""================================
+
+Report: {name}
+
+{report}
+
+"""
+        return result
+
+    def run_all(self):
+        reports = [
+            self.run_one_for_all(self.args[name], self.hledger_options)
+            for name in self.no_ask
+        ]
+        reports_txt = "\n".join(reports) + "================================"
+        return reports_txt
+
     def run_batch(self):
         if not self.name:
             return f"Missing command\n\n{self.available_txt}"
+        elif self.name == "all":
+            return self.run_all()
         elif self.name not in self.names:
             raise KeyError(f"{self.name} not found.\n\n{self.available_txt}")
         elif self.name in self.has_ask:

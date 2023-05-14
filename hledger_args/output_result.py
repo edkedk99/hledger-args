@@ -7,8 +7,6 @@ from fpdf import FPDF
 from .batch_args import BatchArgs
 from .inter_args import InteractiveArgs
 
-# TODO: name for interactive
-
 
 def create_pdf(header: str, text: str, output_path: Path):
     pdf = FPDF()

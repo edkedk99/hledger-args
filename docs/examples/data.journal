@@ -7,7 +7,8 @@
 #+args aapl_cur:bal desc:"Buy AAPL" cur:{commodity}
 #+args itag:print {tag} {account}
 #+args iacct: print {account}
-#+args sell_aapl: bal {cur} {tag_price}
+#+args sell_aapl: bal cur:AAPL
+
 commodity 1,000.00   USD
 commodity 1,000.0000 AAPL        ; yahoo_ticker:AAPL
 commodity 1,000.0000 GOOG        ; yahoo_ticker:GOOG

@@ -1,7 +1,9 @@
-from typing import Tuple, Optional
+from typing import Optional, Tuple
+
 import rich_click as click
 
 from hledger_args.output_result import output_report
+
 from .batch_args import BatchArgs
 from .inter_args import InteractiveArgs
 
@@ -46,9 +48,14 @@ click.rich_click.STYLE_OPTIONS_PANEL_BORDER = "dim"  # Possibly conceal
         dir_okay=True,
     ),
     required=False,
+    help="Save the report to a folder named according to the current date under the specified directory",
 )
 @click.option(
-    "-o", "--pdf-file", type=click.Path(file_okay=True, dir_okay=False), required=False
+    "-o",
+    "--pdf-file",
+    type=click.Path(file_okay=True, dir_okay=False),
+    required=False,
+    help="output the report to the specified file in pdf",
 )
 @click.argument("name", type=click.STRING, required=False)
 @click.argument("extra_hledger_options", nargs=-1)
@@ -65,7 +72,7 @@ def cli(
 
      **NAME**: Command name to run saved in the journal sub directives. Not available in Interactive mode
 
-    **EXTRA_HLEDGER_OPTIONS**: Extra options to send to hledger command. Not available in Interactive mode.
+    **EXTRA_HLEDGER_OPTIONS**: Extra options to send to hledger command. Not available in Interactive mode. The name **"all"** is special and output all the *no interactive* commands.
 
      ---
 
