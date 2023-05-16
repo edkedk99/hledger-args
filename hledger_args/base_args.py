@@ -19,14 +19,13 @@ class BaseArgs:
 
     def __init__(self, files: Tuple[str, ...]) -> None:
         self.files = files
-
         vars = HledgerVars(files)
         self.args = vars.get_namespace_vars(self.NAMESPACE)
-        self.names = set(list(self.args.keys()))
+        self.names = list(self.args.keys())
         self.has_ask = {
             name for name, var in self.args.items() if re.search(r"\{(.*?)\}", var)
         }
-        self.no_ask = self.names.difference(self.has_ask)
+        self.no_ask = set(self.names).difference(self.has_ask)
 
         self.files_comm = get_files_comm(files)
 
@@ -42,3 +41,18 @@ class BaseArgs:
         base_comm_str = shlex.join(base_comm)
         print(f"stderr: {base_comm_str}\n", file=sys.stderr)
         return report
+
+    def run_shell(self, options: str, extra: Optional[Tuple[str,...]] = None):
+       options_list = shlex.split(options)
+       if extra:
+            options_list = [*options_list, *extra]
+
+       subprocess.run(options_list, capture_output=False, check=True, input=None)
+       base_comm_str = shlex.join(options_list)
+       print(f"stderr: {base_comm_str}\n", file=sys.stderr)
+
+
+       
+
+        
+ 

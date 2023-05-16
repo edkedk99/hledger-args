@@ -61,4 +61,7 @@ Report: {name}
             raise KeyError(f"{self.name} is interactive only.\n\n{self.available_txt}")
         else:
             options = self.args[self.name]
-            return self.run_args(options, self.hledger_options)
+            if self.name.startswith("shell_"):
+                return self.run_shell(options, self.hledger_options)
+            else:
+                return self.run_args(options, self.hledger_options)

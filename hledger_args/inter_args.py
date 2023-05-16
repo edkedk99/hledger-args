@@ -95,7 +95,8 @@ class InteractiveArgs(BaseArgs):
             _type = questionary.select("Account Type", choices=choices).ask()
             type_code = types[_type]
             answer = f'"type:{type_code}"'
-
+        elif placeholder == "file":
+            answer = self.files[0]
         else:
             answer = questionary.text(placeholder).ask()
 
@@ -134,4 +135,8 @@ class InteractiveArgs(BaseArgs):
     def get_report(self):
         options_str = self.args[self.name]
         replaced = self.replace_options(options_str)
-        return self.run_args(replaced)
+
+        if self.name.startswith("shell_"):
+            return self.run_shell(replaced)
+        else:
+            return self.run_args(replaced)

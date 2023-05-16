@@ -38,7 +38,7 @@ def output_report(
         name = args.name or "empty"
         file_dest = file_dir.joinpath(f"{name}.pdf")
     else:
-        print(args.report)
+        print(args.report or "")
         return
 
     header = f"""Report: {args.name}
@@ -46,4 +46,5 @@ _________________
 
 """
 
-    create_pdf(header, args.report, file_dest)
+    if args.report:
+        create_pdf(header, args.report, file_dest)
