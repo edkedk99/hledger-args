@@ -8,6 +8,8 @@
 #+args itag:print {tag} {account}
 #+args iacct: print {account}
 #+args sell_aapl: bal cur:AAPL
+#+args shell_file: echo [file]
+
 
 commodity 1,000.00   USD
 commodity 1,000.0000 AAPL        ; yahoo_ticker:AAPL

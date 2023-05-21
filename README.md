@@ -22,12 +22,22 @@ Instead of giving the the desired command thru a command-line argument, choose i
 | {type}       | select between accounts type                                                   |
 | {cur}        | fuzzy search existing commodities                                              |
 
+### Non hledger commands
+
+It is possible to run other commands beside the default *hledger*. For that, name the arg as /shell_name/ and /hledger-args/ will execute it according to the conditions:
+
+- It can accept inputs from the terminal stdin.
+- The string /[file]/ will be replaces by the name of the "--file" option.
+- It will not be saved in PDF report
+
+It is useful if you want to add a command that doesn't use hledger but needs the file name being used.
+
 ### PDF output.
 
 There are two ways to output the reports to pdf:
 
 - Option **--pdf-file**: Save the report to the specified file.
-- Option **--pdf-dir**: Save the report to a directory named after the current date under the specified directory. Creates it if doesn't exist. Should be used to keep a history of generated reports
+- Option **--pdf-dir**: Save the report to a directory named after the current date under the specified directory. Creates it if doesn't exist. Should be used to keep a history of generated reports.
 
 
 ## Installation

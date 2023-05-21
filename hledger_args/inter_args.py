@@ -95,8 +95,6 @@ class InteractiveArgs(BaseArgs):
             _type = questionary.select("Account Type", choices=choices).ask()
             type_code = types[_type]
             answer = f'"type:{type_code}"'
-        elif placeholder == "file":
-            answer = self.files[0]
         else:
             answer = questionary.text(placeholder).ask()
 
