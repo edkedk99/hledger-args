@@ -58,7 +58,7 @@ Report: {name}
         elif self.name not in self.names:
             raise KeyError(f"{self.name} not found.\n\n{self.available_txt}")
         elif self.name in self.has_ask:
-            raise KeyError(f"{self.name} is interactive only.\n\n{self.available_txt}")
+            raise ValueError(f"{self.name} is interactive only.\n\n{self.available_txt}")
         else:
             options = self.args[self.name]
             if self.name.startswith("shell_"):

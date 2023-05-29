@@ -19,8 +19,8 @@ class BaseArgs:
 
     def __init__(self, files: Tuple[str, ...]) -> None:
         self.files = files
-        vars = HledgerVars(files)
-        namespace_args = vars.get_namespace_vars(self.NAMESPACE)
+        namespace_args = HledgerVars(files, self.NAMESPACE).vars
+
         self.args = {
             key: value.replace("[file]", self.files[0])
             for key, value in namespace_args.items()
@@ -39,12 +39,16 @@ class BaseArgs:
             options_list = [*options_list, *extra]
 
         base_comm = ["hledger", *self.files_comm, *options_list]
-        proc = subprocess.run(base_comm, capture_output=True, check=True)
-        report = proc.stdout.decode("utf8")
-
         base_comm_str = shlex.join(base_comm)
-        print(f"stderr: {base_comm_str}\n", file=sys.stderr)
-        return report
+
+        proc = subprocess.run(base_comm, capture_output=True)
+        if proc.returncode == 0:
+            report = proc.stdout.decode("utf8")
+            print(f"stderr: {base_comm_str}\n", file=sys.stderr)
+            return report
+        else:
+            err = proc.stderr.decode("utf8")
+            raise ValueError(f"\n\ncommand: {base_comm_str}\n\n{err}")
 
     def run_shell(self, options: str, extra: Optional[Tuple[str, ...]] = None):
         options_list = shlex.split(options)
@@ -54,4 +58,4 @@ class BaseArgs:
         base_comm_str = shlex.join(options_list)
         print(f"stderr: {base_comm_str}\n", file=sys.stderr)
 
-        subprocess.run(options_list, capture_output=False, check=True, input=None)
+        subprocess.run(options_list, capture_output=False, input=None)
