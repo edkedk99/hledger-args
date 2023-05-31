@@ -1,35 +1,28 @@
-from typing import Dict, Optional, Tuple
+from io import TextIOWrapper
+from typing import Dict, Tuple
+
+NAMESPACE_START = "#+"
 
 
-class HledgerVars:
-    NAMESPACE_START = "#+"
+def get_vars(f: TextIOWrapper, namespace: str):
+    start = NAMESPACE_START + namespace
+    start_pos = len(start)
 
-    def __init__(self, files: Tuple[str, ...], namespace: str):
-        self.files = files
-        self.namespace = namespace
-        self.vars = self.get_namespace_vars()
+    args_list = [
+        row[start_pos:].split(":", 1)
+        for row in f
+        if row.startswith(NAMESPACE_START + namespace) and ":" in row[start_pos:]
+    ]
 
-    def get_row_comm(self, row: str, namespace: str) -> Optional[Tuple[str, str]]:
-        start = self.NAMESPACE_START + namespace
-        if not row.startswith(start):
-            return
+    args_dicts = {arg[0].strip(): arg[1].strip() for arg in args_list}
+    return args_dicts
 
-        var_list = row[len(start) :].strip().split(":", 1)
-        if len(var_list) == 2:
-            return tuple(var_list)
 
-    def get_file_vars(self, file: str, namespace: str):
+def get_namespace_vars(files: Tuple[str, ...], namespace: str):
+    result: Dict[str, str] = {}
+    for file in files:
         with open(file, "r") as f:
-            args = [self.get_row_comm(row, namespace) for row in f]
-            valid_args = [arg for arg in args if arg]
-            args_dict = {name: command for name, command in valid_args}
-            return args_dict
+            args = get_vars(f, namespace)
+            result = {**result, **args}
 
-    def get_namespace_vars(self):
-        result: Dict[str, str] = {}
-        for file in self.files:
-            file_vars = self.get_file_vars(file, self.namespace)
-            if file_vars:
-                result = {**result, **file_vars}
-
-        return result
+    return result

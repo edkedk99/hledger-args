@@ -1,67 +1,51 @@
-from typing import Optional, Tuple
+import sys
+from typing import Dict, Tuple
 
-from .base_args import BaseArgs
+from .lib import is_batch, list_commands, run_args, run_shell, title
+from .options import get_namespace_vars
 
 
-class BatchArgs(BaseArgs):
-    def __init__(
-        self,
-        files: Tuple[str, ...],
-        name: Optional[str],
-        hledger_options: Tuple[str, str],
-    ) -> None:
-        super().__init__(files)
-        self.name = name
-        self.hledger_options = hledger_options
-        self.report = self.run_batch()
+def check_name(args: Dict[str, str], name: str):
+    batch_args = [name for name, var in args.items() if not is_batch(var)]
+    inter_args = [name for name, var in args.items() if is_batch(var)]
 
-    @property
-    def available_txt(self):
-        text = "Available args\n\n"
+    if name in batch_args:
+        return
 
-        text += "No interactive allowed args (Report)\n"
-        text += "----------------------------\n"
-        no_ask_str = "\n".join(self.no_ask)
-        text += no_ask_str + "\n\n"
+    commands = list_commands(args) + "\n\n"
 
-        if len(self.has_ask) > 0:
-            text += "Interactive-only args (Report)\n"
-            text += "------------------------------\n"
-            has_ask_str = "\n".join(self.has_ask)
-            text += has_ask_str + "\n\n"
-        return text
+    if name in inter_args:
+        print(commands + f"Command {name} is interactive")
+        sys.exit()
 
-    def run_one_for_all(self, name: str, hledger_options: Tuple[str, ...]):
-        report = self.run_args(name, hledger_options)
-        result = f"""================================
+    if name not in args.keys():
+        print(commands + f"Unknown command {name}")
+        sys.exit()
 
-Report: {name}
 
-{report}
-
-"""
+def get_batch_report(files: Tuple[str, ...], name: str, args: Dict[str, str]):
+    check_name(args, name)
+    options = args[name]
+    if name.startswith("shell"):
+        run_shell(options, files[0])
+        return f"Shell Command: {name}\n"
+    else:
+        result = title(name) + "\n\n"
+        result += run_args(files, options) + "\n"
         return result
 
-    def run_all(self):
-        reports = [
-            self.run_one_for_all(self.args[name], self.hledger_options)
-            for name in self.no_ask
-        ]
-        reports_txt = "\n".join(reports) + "================================"
-        return reports_txt
 
-    def run_batch(self):
-        if not self.name:
-            return f"Missing command\n\n{self.available_txt}"
-        elif self.name == "all":
-            return self.run_all()
-        elif self.name not in self.names:
-            raise KeyError(f"{self.name} not found.\n\n{self.available_txt}")
-        elif self.name in self.has_ask:
-            raise ValueError(f"{self.name} is interactive only.\n\n{self.available_txt}")
-        else:
-            options = self.args[self.name]
-            if self.name.startswith("shell_"):
-                return self.run_shell(options, self.hledger_options)
-            else:
-                return self.run_args(options, self.hledger_options)
+def get_batch_reports(files: Tuple[str, ...], names: Tuple[str, ...]):
+    args = get_namespace_vars(files, "args")
+
+    if len(names) == 0:
+        commands = list_commands(args)
+        print(f"{commands}\n\nMissing name")
+        sys.exit()
+
+    for name in names:
+        check_name(args, name)
+
+    reports = [get_batch_report(files, name, args) for name in names]
+    reports_str = "\n".join(reports)
+    return reports_str
