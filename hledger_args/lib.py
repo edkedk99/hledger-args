@@ -19,12 +19,12 @@ def get_default_file():
         return (str(default_path),)
 
 
-def create_pdf(header: str, text: str, output_path: str):
+def create_pdf(text: str, output_path: str):
     pdf = FPDF()
     pdf.add_page(orientation="L")
     pdf.set_font("Courier", "", 12)
 
-    pdf.multi_cell(0, None, header, ln=True)
+    pdf.multi_cell(0, None, "Report", ln=True)
     lines = text.split("\n")
 
     for line in lines:

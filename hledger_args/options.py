@@ -1,5 +1,5 @@
 from io import TextIOWrapper
-from typing import Dict, Tuple
+from typing import Dict, List, Tuple
 
 NAMESPACE_START = "#+"
 
@@ -26,3 +26,11 @@ def get_namespace_vars(files: Tuple[str, ...], namespace: str):
             result = {**result, **args}
 
     return result
+
+
+def get_namespaces(files: Tuple[str,...]):
+    result: List = []
+    for file in files:
+        with open(file, "r") as f:
+            for row in f:
+                pass

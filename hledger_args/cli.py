@@ -127,7 +127,7 @@ def cli(
         output = get_batch_reports(file, name)
 
     if pdf_file:
-        create_pdf("", output or "", pdf_file)
+        create_pdf(output or "", pdf_file)
         print(f"Report saved on {pdf_file}")
     else:
         click.echo(output)
